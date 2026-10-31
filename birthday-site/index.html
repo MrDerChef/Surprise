@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Happy Birthday ✦</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#08170f">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600;1,700&family=Figtree:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Desktop gate: shown by CSS only on large, mouse-driven screens -->
+  <section id="gate" aria-live="polite">
+    <div class="gate__card">
+      <div class="gate__phone" aria-hidden="true"><svg class="gate__star" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg></div>
+      <h1 data-t="gate.title"></h1>
+      <p data-t="gate.text"></p>
+      <div class="gate__qr" id="gateQr"></div>
+      <p class="gate__scan" data-t="gate.scanHint"></p>
+    </div>
+  </section>
+
+  <!-- Ambient layers -->
+  <canvas id="ambient" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <button id="mute" class="mute" type="button" aria-label="Mute music" aria-pressed="false" hidden>
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  <main id="app">
+
+    <!-- ===== Before opening: countdown ===== -->
+    <section id="s-wait" class="scene scene--wait" hidden>
+      <div class="radiate" aria-hidden="true">
+        <svg class="radiate__ring" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        <svg class="radiate__ring" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        <svg class="radiate__ring" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        <svg class="radiate__core" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+      </div>
+      <div class="wait">
+        <p class="kicker" data-t="schedule.wait.kicker"></p>
+        <h1 class="display display--xl" id="waitTitle"></h1>
+        <p class="wait__line" data-t="schedule.wait.line"></p>
+        <div class="cd" id="cd" role="timer" aria-label="Time until the surprise opens"></div>
+        <p class="wait__note" data-t="schedule.wait.note"></p>
+      </div>
+    </section>
+
+    <!-- ===== After closing ===== -->
+    <section id="s-closed" class="scene scene--closed" hidden>
+      <div class="wait">
+        <svg class="closed__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        <p class="kicker" data-t="schedule.closed.kicker"></p>
+        <h1 class="display display--xl" data-t="schedule.closed.title"></h1>
+        <p class="wait__line" data-t="schedule.closed.line"></p>
+        <p class="wait__note" data-t="schedule.closed.foot"></p>
+      </div>
+    </section>
+
+    <!-- ===== Scene 1 · the question ===== -->
+    <section id="s-intro" class="scene scene--intro is-active" data-scene="1">
+      <div class="stage stage--tap" id="introTap">
+        <div class="orb" aria-hidden="true"><i></i><i></i><i></i><svg class="orb__star" viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg></div>
+        <p class="kicker" data-t="quiz.kicker"></p>
+        <button id="startBtn" class="btn btn--ring" type="button"><span data-t="quiz.startLabel"></span></button>
+      </div>
+
+      <div class="stage stage--quiz" id="introQuiz" hidden>
+        <p class="kicker" data-t="quiz.kicker"></p>
+        <h1 class="display" id="quizQuestion"></h1>
+        <p class="hint" data-t="quiz.hint"></p>
+        <ol class="boxes" id="boxes"></ol>
+      </div>
+
+      <div class="success" id="success" hidden>
+        <div class="success__inner">
+          <svg class="success__check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23"/><path d="M15 27.5l8 8L38 19"/></svg>
+          <h2 class="display" data-t="quiz.successTitle"></h2>
+          <p data-t="quiz.successLine"></p>
+          <button id="successBtn" class="btn" type="button">Let’s go</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Scene 3 · about her + live counter ===== -->
+    <section id="s-about" class="scene scene--about" data-scene="2" hidden>
+      <p class="kicker reveal" data-t="about.kicker"></p>
+      <h2 class="display display--xl reveal" id="aboutTitle"></h2>
+      <div class="prose" id="aboutText"></div>
+
+      <div class="counter reveal" id="counter">
+        <p class="counter__title" data-t="about.counterTitle"></p>
+        <div class="counter__ymd" id="cYmd"></div>
+        <div class="counter__totals" id="cTotals"></div>
+        <p class="counter__note" data-t="about.counterNote"></p>
+      </div>
+    </section>
+
+    <!-- ===== Scene 4 · what you've been in my life ===== -->
+    <section id="s-life" class="scene scene--life" data-scene="3" hidden>
+      <p class="kicker reveal" data-t="life.kicker"></p>
+      <h2 class="display display--xl reveal" data-t="life.title"></h2>
+      <div class="prose" id="lifeText"></div>
+
+      <div class="quote" id="quote">
+        <p class="quote__label reveal" id="qEnLabel"></p>
+        <p class="quote__en reveal" id="qEn"></p>
+        <p class="quote__label quote__label--po reveal" id="qPoLabel"></p>
+        <div class="quote__verse" id="qVerse"></div>
+      </div>
+
+      <div class="lang reveal" id="lang">
+        <svg class="lang__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        <p class="lang__kicker" data-t="life.duo.kicker"></p>
+        <div class="lang__row"><span data-t="life.duo.enTag"></span><b data-t="life.duo.en"></b></div>
+        <div class="lang__row"><span data-t="life.duo.deTag"></span><b data-t="life.duo.de"></b></div>
+        <p class="lang__line" data-t="life.duo.line"></p>
+      </div>
+
+      <div class="starrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+      </div>
+    </section>
+
+    <!-- ===== Scene 5 · the poem ===== -->
+    <section id="s-poem" class="scene scene--poem" data-scene="4" hidden>
+      <p class="kicker reveal" data-t="poem.kicker"></p>
+
+      <div class="letter" id="letter">
+        <button id="seal" class="seal" type="button" aria-label="Open the letter">
+          <span class="seal__half seal__half--l"></span>
+          <span class="seal__half seal__half--r"></span>
+          <svg class="seal__mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+        </button>
+        <p class="seal__hint" id="sealHint" data-t="poem.sealHint"></p>
+        <div class="flap" aria-hidden="true"></div>
+      </div>
+
+      <article class="poem" id="poem" hidden>
+        <h2 class="poem__title" id="poemTitle"></h2>
+        <div class="poem__body" id="poemBody"></div>
+        <p class="poem__sign" id="poemSign"></p>
+        <p class="poem__ps" id="poemPs"></p>
+        <button id="poemNext" class="btn btn--quiet" type="button" hidden></button>
+      </article>
+    </section>
+
+    <!-- ===== Scene 6 · finale ===== -->
+    <section id="s-finale" class="scene scene--finale" data-scene="5" hidden>
+      <div class="finale__stage" id="finaleStage">
+
+        <div class="envelope" id="envelope">
+          <button class="envelope__btn" id="envBtn" type="button" aria-label="Open the envelope">
+            <div class="envelope__back"></div>
+            <div class="envelope__card" id="envCard">
+              <p class="envelope__to"></p>
+            </div>
+            <div class="envelope__front"></div>
+            <div class="envelope__flap"></div>
+            <svg class="envelope__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.8l1.4-6.8L2.2 9.3l6.9-.8z"/></svg>
+          </button>
+          <p class="seal__hint" data-t="finale.envelopeHint"></p>
+        </div>
+
+        <div class="card" id="hbCard" hidden>
+          <p class="kicker" id="hbDate"></p>
+          <h2 class="card__hb" data-t="finale.cardTitle"></h2>
+          <p class="card__name" id="hbName"></p>
+          <p class="card__msg" data-t="finale.cardMessage"></p>
+          <p class="card__from" id="hbFrom"></p>
+          <button id="wishBtn" class="btn" type="button"><span data-t="finale.wishButton"></span></button>
+        </div>
+
+        <div class="cake-wrap" id="cakeWrap" hidden>
+          <p class="hint" id="cakeHint" data-t="finale.cakeHint"></p>
+          <div class="cake" id="cake" role="button" tabindex="0" aria-label="Blow out the candles"></div>
+          <button id="micBtn" class="btn btn--quiet" type="button"><span data-t="finale.micLabel"></span></button>
+        </div>
+
+        <div class="after" id="after" hidden>
+          <h2 class="display display--xl" id="afterName"></h2>
+          <p class="after__line" data-t="finale.afterBlow"></p>
+          <p class="after__extra" data-t="finale.afterExtra"></p>
+          <p class="after__from" id="afterFrom"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <audio id="song" preload="auto" loop playsinline></audio>
+
+  <script src="vendor/qrcode.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/poem.js"></script>
+  <script src="js/finale.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/boot.js"></script>
+</body>
+</html>
